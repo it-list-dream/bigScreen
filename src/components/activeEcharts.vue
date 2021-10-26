@@ -1,0 +1,140 @@
+<template>
+  <div class="active_containner" ref="active"></div>
+</template>
+
+<script>
+export default {
+  name: "activeEcharts",
+  data() {
+    return {
+      option: null,
+    };
+  },
+  mounted: function () {
+    this.draw();
+  },
+  methods: {
+    draw() {
+      var myChart = this.$echarts.init(this.$refs.active);
+      this.option = {
+        title: {
+          text: "近半年活跃总数 300000",
+          top: 26,
+          left:'center',
+          textStyle: {
+            color: "#F8A417",
+            fontFamily: "sans-serif",
+            fontSize: 27,
+          }
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "none",
+          },
+        },
+        grid: {
+          top: "30%",
+          left: "4%",
+          right: "10%",
+          bottom: "0%",
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            name: "月份",
+            type: "category",
+            data: [1, 2, 3, 4, 5, 6],
+            axisTick: {
+              show: false,
+              alignWithLabel: true,
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#1654fe",
+                width: 1,
+                opacity: 0.4,
+              },
+            },
+            nameTextStyle: {
+              color: "#1654fe",
+              fontFamily: "sans-serif",
+              fontSize: 18,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            name: "活跃数/人",
+            type: "value",
+            nameTextStyle: {
+              color: "#63B1FD",
+              fontFamily: "sans-serif",
+              fontSize: 18,
+              padding:[0,0,0,20]
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#1654fe",
+                width: 1,
+                opacity: 0.4,
+              },
+            },
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: "#1654fe",
+                width: 1,
+                opacity: 0.3,
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+          },
+          {
+            type: "value",
+            nameTextStyle: {
+              color: "#63B1FD",
+              fontFamily: "sans-serif",
+              fontSize: 18,
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#1654fe",
+                width: 1,
+                opacity: 0.4,
+              },
+            },
+          },
+        ],
+        series: [
+          {
+            name: "Direct",
+            type: "bar",
+            barWidth: 28,
+            data: [10, 52, 200, 334, 390, 330],
+            itemStyle: {
+              normal: {
+                color: "#F8A417",
+                barBorderRadius: [6, 6, 0, 0],
+              },
+            },
+          },
+        ],
+      };
+      myChart.setOption(this.option);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.active_containner {
+  width: 100%;
+  height: 320px;
+}
+</style>
