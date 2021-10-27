@@ -38,7 +38,7 @@ export default {
       var myChart = this.$echarts.init(this.$refs.poupar);
       var salvProName = this.coachx;
       var salvProValue = this.coachy;
-      console.log(salvProName, salvProValue);
+     // console.log(salvProName, salvProValue);
       var salvProMax = []; //背景按最大值
       for (let i = 0; i < salvProValue.length; i++) {
         console.log(salvProMax);

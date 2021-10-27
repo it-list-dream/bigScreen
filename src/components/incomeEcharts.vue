@@ -5,20 +5,40 @@
 <script>
 export default {
   name: "incomeEcharts",
+  props: {
+    income: {
+      type: Object,
+    },
+  },
   data() {
     return {
       option: null,
     };
   },
-  mounted: function () {
-    this.draw();
+  // mounted: function () {
+  //   this.draw();
+  // },
+  watch: {
+    income: {
+      handler(newValue, oldValue) {
+        console.log(9999, this.income);
+        this.draw();
+      },
+      deep: true,
+    },
   },
   methods: {
     draw() {
+      var incomeTotalList = this.income.incomeCount;
+      var incomeTotal = 0;
+      var monthList = this.income.monthList;
+      for (var i = 0; i < incomeTotalList.length; i++) {
+        incomeTotal += incomeTotalList[i];
+      }
       var myChart = this.$echarts.init(this.$refs.income);
       this.option = {
         title: {
-          text: "近半年经营收入 ￥300000",
+          text: "近半年经营收入 ￥"+incomeTotal.toFixed(2),
           top: 26,
           left: "center",
           textStyle: {
@@ -44,7 +64,7 @@ export default {
           {
             name: "月份",
             type: "category",
-            data: [1, 2, 3, 4, 5, 6],
+            data: monthList,
             axisTick: {
               show: false,
               alignWithLabel: true,
@@ -116,11 +136,11 @@ export default {
             name: "Direct",
             type: "bar",
             barWidth: 28,
-            data: [10, 52, 200, 334, 390, 330],
+            data: incomeTotalList,
             itemStyle: {
               normal: {
                 color: "#07E8F1",
-                barBorderRadius: [6, 6, 0, 0],
+                barBorderRadius: [4, 4, 0, 0],
               },
             },
           },

@@ -34,7 +34,7 @@ export default {
       //   console.log(this.$echarts);
       var salvProName = this.groupx;
       var salvProValue = this.groupy;
-      console.log("g", salvProName, salvProValue);
+     // console.log("g", salvProName, salvProValue);
       var salvProMax = []; //背景按最大值
       for (let i = 0; i < salvProValue.length; i++) {
         salvProMax.push(salvProValue[0]);

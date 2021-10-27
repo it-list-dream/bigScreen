@@ -1,98 +1,129 @@
 <template>
-  <div class="number-box">
-    <p class="box-item" v-for="(item, index) in computeNumber" :key="index">
-      <span ref="numberDom">0123456789</span>
-    </p>
+  <div class="chart-m-l-c">
+    <label v-if="scrollNumber">{{ scrollNumber.title }}</label>
+    <div class="count">
+      <b v-for="(item, index) in prosecutorArr" :key="index">
+        <div :style="{ top: -item * 70 + 'px' }">
+          <i v-for="(ic, indexc) in 10" :key="indexc">{{ ic - 1 }}</i>
+        </div>
+      </b>
+    </div>
+    <span class="unit" v-if="scrollNumber">{{ scrollNumber.title1 }}</span>
+    <!-- <button @click="refreshLeft">刷新</button> -->
   </div>
 </template>
-
 <script>
 export default {
   name: "numberScroll",
-  props: {
-    number: {
-      type: Number,
-      default: 0,
-    },
-  },
+  props: ["scrollNumber"],
   data() {
     return {
-      computeNumber: [],
-      timeTicket: null,
-      maxLen: 6,
+      prosecutorArr: ["0", "0", "0", "0", "0", "0", "0", "0"],
+      //这里的数字数组是个8位数，只是占位，不能直接使用，看需求有可能是10位或11、12、20等等
+      numbers: "59832",
+      //这个参数是后台传给我们的，也不能直接使用，需要转换
     };
   },
-  methods: {
-    prefixZero(num, n) {
-      return (Array(n).jon(0) + num).slice(-n).split("");
-    },
-    getRandomNumber(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    },
-    setNumberTransform() {
-      let numberItems = this.$refs.numberDom;
-      for (let index = 0; index < numberItems.length; index++) {
-          let elem = numberItems[index];
-          elem.style.transform = `tranlate(-50%,-${Number(this,this.computeNumber[index]) *10}%)`
-      }
-    },
-    increaseNumber(){
-        this.refresh();
-        this.timeTicket = setTimeout(this.increaseNumber,5000)
-    },
-    refresh(){
-        this.computeNumber = this.prefixZero(this.number,this.maxLen)
-        this.$nextTick(()=>this.setNumberTransform());
-    },
-    destroyed() {
-        clearTimeout(this.timeTicket);
-        this.timeTicket = null;
+  watch: {
+    scrollNumber: {
+      handler(newValue, oldValue) {
+        this.numbers = this.scrollNumber.onlineTotal;
+        console.log(this.scrollNumber.onlineTotal)
+        this.refreshLeft();
+      },
+      deep: true,
     },
   },
-  watch:{
-      number(){
-          this.refresh();
-      }
-  }
+  methods: {
+    PrefixInteger(num, length) {
+      //给数字前面补零 比如‘59832’补成8位即位‘00059832’
+      return (Array(length).join("0") + num).slice(-length);
+    },
+    // getRandomNumber(min, max) {
+    //   //为了看效果，refreshLeft触发增加数字看效果，和后台数据过来效果一样，不管增加或减少
+    //   return Math.floor(Math.random() * (max - min + 1) + min);
+    // },
+    plusNPrAll() {
+      //为了看效果，点击上面html中的iconfont触发，refreshLeft方法（我真啰嗦~）
+      const res = this.PrefixInteger(this.numbers, 8);
+      this.prosecutorArr = res.toString().split("");
+    },
+    refreshLeft() {
+      //刷新数据，我这里因为静态看效果，联调时将请求写在里面就好了
+      //this.numbers = parseInt(this.numbers) + this.getRandomNumber(1, 100);
+      this.numbers = Number(this.numbers);
+      this.plusNPrAll();
+    },
+  },
 };
 </script>
 
 <style scoped>
-.number-box {
-  width: 56.8%;
-  display: flex;
-  justify-content: center;
-  margin: 26px auto 0;
+.chart-m-l-c {
+  float: left;
+  width: 100%;
+  height: 70px;
+  padding: 10px 0;
 }
-.number-box p {
-  flex: 1;
-  height: 163px;
-  line-height: 163px;
-  background: #2a3242;
-  margin: 0 26px 0 0;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 12px;
-  padding: 0 20px;
-  display: inline-block;
-  font-size: 62px;
-  position: relative;
-  writing-mode: vertical-lr;
-  text-orientation: upright;
-  overflow: hidden;
-}
-.number-box p:last-child {
-  margin-right: 0;
-}
-span {
-  color: #9185e0;
-  font-size: 118px;
+.chart-m-l-c label {
+  line-height: 70px;
+  float: left;
+  font-size: 20px;
   font-weight: bold;
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%, -50%);
-  transition: transform 2s;
-  letter-spacing: 10px;
+  color: #e5e5e5;
 }
+.chart-m-l-c .count {
+  height: 70px;
+  float: left;
+  padding: 0 5px;
+}
+.chart-m-l-c .count b {
+  position: relative;
+  float: left;
+  z-index: 3;
+  overflow: hidden;
+  width: 48px;
+  height: 70px;
+  line-height: 70px;
+  background: #1b2873;
+  border-radius: 2px;
+  color: #ffdd3f;
+  text-align: center;
+  margin: 0 4px;
+}
+.chart-m-l-c .count b div {
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.8s ease-in-out;
+}
+.chart-m-l-c .count b div i {
+  float: left;
+  font-style: normal;
+  width: 100%;
+  height: 70px;
+  font-size: 50px;
+  color: #ffdd3f;
+}
+.chart-m-l-c .unit {
+  float: left;
+  line-height: 70px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #e5e5e5;
+}
+/* .chart-m-l-c span.iconfont {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  float: right;
+  text-align: center;
+  cursor: pointer;
+  color: #0071ff;
+}
+.chart-m-l-c span.iconfont:hover {
+  color: #5ec2a6;
+} */
 </style>

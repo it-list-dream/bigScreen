@@ -2,7 +2,9 @@
   <div class="container">
     <div class="header">
       <div class="header_tips">
-        <div class="store_total">门店总数： 1600</div>
+        <div class="store_total" v-if="allOnlineData">
+          门店总数：{{ allOnlineData.GymCount }}
+        </div>
         <div class="time">{{ date }} - {{ days }}</div>
       </div>
       <img src="../assets/title.png" alt="" class="title_image" />
@@ -19,49 +21,70 @@
             <li>
               <div class="statis_item">
                 <span>会员人数（人）</span>
-                <span>6845790</span>
+                <span v-if="allOnlineData">{{ allOnlineData.TotalUser }}</span>
+                <!-- <span>33322</span> -->
               </div>
             </li>
             <li>
               <div class="statis_item">
                 <span>私教人数（人）</span>
-                <span>5684720</span>
+                <span v-if="allOnlineData">{{
+                  allOnlineData.CoachUserCount
+                }}</span>
+                <!-- <span>8732</span> -->
               </div>
             </li>
             <li>
               <div class="statis_item">
                 <span>会员金额（元）</span>
-                <span>￥852147021</span>
+                <span v-if="allOnlineData"
+                  >￥{{ allOnlineData.CardMoney }}</span
+                >
+                <!-- <span>￥1800</span> -->
               </div>
             </li>
             <li>
               <div class="statis_item">
                 <span>私教金额（元）</span>
-                <span>￥2356841</span>
+                <span v-if="allOnlineData"
+                  >￥{{ allOnlineData.CoachMoney }}</span
+                >
+                <!-- <span>￥9000</span> -->
               </div>
             </li>
           </ul>
         </div>
         <div class="real_sign">
           <h2 class="sign_title">实时签到</h2>
-          <dv-scroll-board
-            :config="config"
-            style="width: 500px; height: 220px"
-          />
-          <!-- <sign-in :number="attendanceNumber"></sign-in> -->
+          <dv-scroll-board :config="config" class="scroll-board" />
         </div>
       </div>
       <div class="center_box">
         <div class="number_box">
           <div class="intoStoreNumber center_item">
-            <span class="center_title">今日进店人数</span>
+            <!-- <span class="center_title">今日进店人数</span>
             <div class="counter">2000</div>
-            <span>人</span>
+            <span>人</span> -->
+            <!-- onlineTotalPeople -->
+            <number-scroll
+              :scrollNumber="{
+                onlineTotal: onlineTotalPeople,
+                title: '今日进店人数',
+                title1: '人',
+              }"
+            ></number-scroll>
           </div>
           <div class="todayWater center_item">
-            <span class="center_title">今日流水</span>
+            <!-- <span class="center_title">今日流水</span>
             <div class="yuan">6346363</div>
-            <span>元</span>
+            <span>元</span> -->
+            <number-scroll
+              :scrollNumber="{
+                onlineTotal: onlineTotalMoney,
+                title: '今日流水',
+                title1: '元',
+              }"
+            ></number-scroll>
           </div>
         </div>
         <!-- 客户分布图 -->
@@ -84,8 +107,15 @@
         </div>
         <!-- 近半年数据 -->
         <div class="recentData">
-          <active-echarts></active-echarts>
-          <income-echarts></income-echarts>
+          <active-echarts
+            :active="{
+              monthList: monthList,
+              activePeopleCount: activePeopleCount,
+            }"
+          ></active-echarts>
+          <income-echarts
+            :income="{ monthList: monthList, incomeCount: incomeCount }"
+          ></income-echarts>
         </div>
       </div>
     </section>
@@ -100,13 +130,13 @@ import personalEcharts from "../components/personalEacharts.vue";
 import activeEcharts from "../components/activeEcharts.vue";
 import incomeEcharts from "../components/incomeEcharts.vue";
 import signIn from "../components/signIn.vue";
+import numberScroll from "../components/numberScroll.vue";
 import QS from "qs";
 export default {
   name: "Layout",
   data() {
     return {
       animate: false,
-      option: null,
       // attendanceNumber:9800
       // coachRanking:null,
       // groupRanking:null
@@ -117,23 +147,21 @@ export default {
       date: null,
       days: null,
       config: {
-        header: ["列1", "列2", "列3"],
-        data: [
-          ["行1列1", "行1列2", "行1列3"],
-          ["行2列1", "行2列2", "行2列3"],
-          ["行3列1", "行3列2", "行3列3"],
-          ["行4列1", "行4列2", "行4列3"],
-          ["行5列1", "行5列2", "行5列3"],
-          ["行6列1", "行6列2", "行6列3"],
-          ["行7列1", "行7列2", "行7列3"],
-          ["行8列1", "行8列2", "行8列3"],
-          ["行9列1", "行9列2", "行9列3"],
-          ["行10列1", "行10列2", "行10列3"],
-        ],
-        index: true,
-        columnWidth: [50],
+        header: ["门店", "姓名", "时间"],
+        data: [[]],
         align: ["center"],
+        headerBGC: "#0B194A",
+        oddRowBGC: "#02071D",
+        evenRowBGC: "#02071D",
+        rowNum: 10,
       },
+      allOnlineData: null,
+      activePeopleCount: [],
+      incomeCount: [],
+      monthList: [],
+      //在线人数
+      onlineTotalPeople: 0,
+      onlineTotalMoney: 0,
     };
   },
   components: {
@@ -143,15 +171,20 @@ export default {
     activeEcharts,
     incomeEcharts,
     signIn,
+    numberScroll,
   },
   created: function () {
     this.getDays();
+    this.monthList = this.getLastSixMon()
+      .map((item) => item.name)
+      .reverse();
+    this.initWebSocket();
   },
-
   mounted() {
     var jsonStr = {
       key: "D3069A3F7C5E262F83ACEE108C4F309D",
     };
+
     this.$axios
       .post(
         "https://user.360ruyu.cn/GymManage.asmx/RevenueData",
@@ -170,8 +203,19 @@ export default {
           this.groupx.push(item.CTO_Name);
           this.groupy.push(item.User_Num);
         });
-        // console.log(this.coachx,this.coachy)
-        // console.log(res.data)
+        //在线数据
+        this.allOnlineData = res.data.revenue;
+        var newData = res.data.revenue;
+        for (var item in newData) {
+          if (item.includes("ActiveUser")) {
+            console.log(this.activePeopleCount);
+            this.activePeopleCount.push(newData[item]);
+          } else if (item.includes("Income")) {
+            this.incomeCount.push(newData[item]);
+          }
+        }
+        this.activePeopleCount.reverse();
+        this.incomeCount.reverse();
       });
   },
   methods: {
@@ -205,6 +249,123 @@ export default {
           this.days = "星期六";
           break;
       }
+    },
+    getLastSixMon() {
+      var data = new Date();
+      //获取年
+      var year = data.getFullYear();
+      //获取月
+      var mon = data.getMonth() + 1;
+      var arry = new Array();
+      for (var i = 0; i < 6; i++) {
+        if (mon <= 0) {
+          year = year - 1;
+          mon = mon + 12;
+        }
+        var mon2 = mon;
+        if (mon < 10) {
+          mon = "0" + mon;
+        }
+        if (i == 0) {
+          arry[i] = {
+            name: mon2 + "月",
+            value: year + "" + mon,
+          };
+        } else {
+          arry[i] = {
+            name: mon2 + "月",
+            value: year + "" + mon,
+          };
+        }
+        mon = mon - 1;
+      }
+      return arry;
+    },
+    initWebSocket: function () {
+      this.websock = new WebSocket("ws://47.111.150.151:2012");
+      this.websock.onopen = this.websocketOnopen;
+      this.websock.onerror = this.websocketOnerror;
+      this.websock.onmessage = this.websocketOnmessage;
+      this.websock.onclose = this.websocketOnclose;
+    },
+    websocketOnopen() {
+      console.log("WebSocket连接成功");
+      var jsonStr = {
+        loginName: "ruyuWebRevenue",
+        userName: "",
+        userId: 0,
+        version: "",
+        sign: "ruyu",
+        gymName: "",
+        typeName: "LoginSuccess",
+        gymid: 88,
+      };
+      this.websocketSend(JSON.stringify(jsonStr));
+    },
+    websocketOnerror() {
+      console.log("WebSocket连接发生错误");
+      this.reconnect();
+    },
+    websocketOnmessage(e) {
+      //监听服务端发送过来的消息
+      var resultData = JSON.parse(e.data);
+      //console.log(resultData)
+      if (resultData.typeName && resultData.typeName == "userCount") {
+        console.log("目前在线人数:", resultData.count);
+        this.onlineTotalPeople = resultData.count;
+      } else if (resultData.typeName && resultData.typeName == "userPay") {
+        console.log("当前流水:", resultData.money);
+        this.onlineTotalMoney = resultData.money;
+      } else {
+        this.handleTable(resultData);
+      }
+    },
+    websocketOnclose(e) {
+      console.log("connection closed (" + e.code + ")");
+      this.reconnect();
+    },
+    websocketSend(text) {
+      // 数据发送
+      try {
+        this.websock.send(text);
+      } catch (err) {
+        console.log("send failed (" + err.code + ")");
+      }
+    },
+    reconnect() {
+      var that = this;
+      if (that.lockReconnect) return;
+      that.lockReconnect = true;
+      //没连接上会一直重连，设置延迟避免请求过多
+      setTimeout(function () {
+        console.info("尝试重连...");
+        that.initWebSocket();
+        that.lockReconnect = false;
+      }, 5000);
+    },
+    handleTable(data1) {
+      //       createdate: "2021-10-27 17:14"
+      // gymid: 108
+      // userName: "赵小燕"
+      console.log('data1',data1);
+      var tableList = [];
+      var newList = [];
+      data1.forEach((item, index) => {
+        for (var o in item) {
+          if (newList.length == 3) {
+            if (o == "gymName" || o == "createdate" || o == "userName") {
+              newList.push(item[o]);
+              if (newList.length == 3) {
+                tableList.push(newList);
+              }
+            }
+            tableList.push(newList);
+          }
+        }
+        newList = [];
+      });
+      this.config.data = tableList;
+      this.$set(this.config, this.config.data, tableList);
     },
   },
 };
@@ -314,6 +475,7 @@ export default {
 .statis_item {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 236px;
   height: 104px;
   box-sizing: border-box;
@@ -327,7 +489,7 @@ export default {
   color: #e7e7e7;
 }
 .statis_item span:last-child {
-  font-size: 30px;
+  font-size: 20px;
   font-family: PingFang SC;
   font-weight: bold;
   color: #ffdd3f;
@@ -341,15 +503,18 @@ export default {
   background-image: url("../assets/2.png");
   background-size: cover;
   background-position: center center;
-  padding: 0 24px;
 }
 .sign_title {
   font-size: 24px;
   font-weight: bold;
   color: #ffffff;
-  padding: 32px 0 30px;
+  padding: 32px 24px 30px;
 }
-
+.scroll-board {
+  /* margin-top: 22px; */
+  width: 547px;
+  height: 420px;
+}
 /* 中间部分 */
 .center_box {
   float: left;

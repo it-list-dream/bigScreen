@@ -5,27 +5,49 @@
 <script>
 export default {
   name: "activeEcharts",
+  props: {
+    active: {
+      type: Object,
+    },
+  },
   data() {
     return {
       option: null,
     };
   },
-  mounted: function () {
-    this.draw();
+  // mounted: function () {
+  //   this.draw();
+  // },
+  watch: {
+    active: {
+      handler(newValue, oldValue) {
+        console.log(9999,this.active);
+        this.draw();
+      },
+      deep: true,
+    },
   },
   methods: {
     draw() {
+      // console.log(this.active.activePeopleCount)
+      var allPeopleList = this.active.activePeopleCount;
+      var monthList = this.active.monthList;
+      var total = 0;
+      for(var i = 0;i<allPeopleList.length;i++){
+         total += allPeopleList [i]
+      }
+      console.log(100000,total)
       var myChart = this.$echarts.init(this.$refs.active);
       this.option = {
         title: {
-          text: "近半年活跃总数 300000",
+          text: "近半年活跃总数 "+total,
           top: 26,
-          left:'center',
+          left: "center",
           textStyle: {
             color: "#F8A417",
             fontFamily: "sans-serif",
             fontSize: 27,
-          }
+          },
         },
         tooltip: {
           trigger: "axis",
@@ -44,7 +66,7 @@ export default {
           {
             name: "月份",
             type: "category",
-            data: [1, 2, 3, 4, 5, 6],
+            data: monthList,
             axisTick: {
               show: false,
               alignWithLabel: true,
@@ -72,7 +94,7 @@ export default {
               color: "#63B1FD",
               fontFamily: "sans-serif",
               fontSize: 18,
-              padding:[0,0,0,20]
+              padding: [0, 0, 0, 20],
             },
             axisLine: {
               show: true,
@@ -116,11 +138,11 @@ export default {
             name: "Direct",
             type: "bar",
             barWidth: 28,
-            data: [10, 52, 200, 334, 390, 330],
+            data:allPeopleList,
             itemStyle: {
               normal: {
                 color: "#F8A417",
-                barBorderRadius: [6, 6, 0, 0],
+                barBorderRadius: [4, 4, 0, 0],
               },
             },
           },
