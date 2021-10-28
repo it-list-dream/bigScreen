@@ -8,12 +8,22 @@ Vue.use(dataV)
 import china from 'echarts/map/json/china.json';
 echarts.registerMap('china', china)
 import './assets/style/reset.css'
+import './assets/style/iconfont.css'
 import axios from 'axios'
+import router from './router/index.js'
 Vue.prototype.$axios = axios
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
+import {
+  MessageBox,
+  Message,
+} from 'element-ui';
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$message = Message;
 Vue.use(ElementUI);
-
 new Vue({
+  router,
   render: h => h(App),
 }).$mount('#app')

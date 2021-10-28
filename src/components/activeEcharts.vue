@@ -21,7 +21,6 @@ export default {
   watch: {
     active: {
       handler(newValue, oldValue) {
-        console.log(9999,this.active);
         this.draw();
       },
       deep: true,
@@ -36,7 +35,7 @@ export default {
       for(var i = 0;i<allPeopleList.length;i++){
          total += allPeopleList [i]
       }
-      console.log(100000,total)
+      //console.log(100000,total)
       var myChart = this.$echarts.init(this.$refs.active);
       this.option = {
         title: {
@@ -56,7 +55,7 @@ export default {
           },
         },
         grid: {
-          top: "30%",
+          top: "32%",
           left: "4%",
           right: "10%",
           bottom: "0%",
@@ -99,7 +98,7 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
-                color: "#1654fe",
+                color: "#63B1FD",
                 width: 1,
                 opacity: 0.4,
               },
@@ -135,9 +134,9 @@ export default {
         ],
         series: [
           {
-            name: "Direct",
+            name: "活跃人数",
             type: "bar",
-            barWidth: 28,
+            barWidth: 20,
             data:allPeopleList,
             itemStyle: {
               normal: {

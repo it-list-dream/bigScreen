@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import {bigNumberTransform} from '../utils/utils.js'
 export default {
   name: "incomeEcharts",
   props: {
@@ -21,7 +22,7 @@ export default {
   watch: {
     income: {
       handler(newValue, oldValue) {
-        console.log(9999, this.income);
+        //console.log(9999, this.income);
         this.draw();
       },
       deep: true,
@@ -38,7 +39,7 @@ export default {
       var myChart = this.$echarts.init(this.$refs.income);
       this.option = {
         title: {
-          text: "近半年经营收入 ￥"+incomeTotal.toFixed(2),
+          text: "近半年经营收入 ￥"+ bigNumberTransform(incomeTotal.toFixed(2)),
           top: 26,
           left: "center",
           textStyle: {
@@ -54,7 +55,7 @@ export default {
           },
         },
         grid: {
-          top: "30%",
+          top: "32%",
           left: "4%",
           right: "10%",
           bottom: "0%",
@@ -97,7 +98,7 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
-                color: "#1654fe",
+                color: "#63B1FD",
                 width: 1,
                 opacity: 0.4,
               },
@@ -133,9 +134,9 @@ export default {
         ],
         series: [
           {
-            name: "Direct",
+            name: "收入",
             type: "bar",
-            barWidth: 28,
+            barWidth: 20,
             data: incomeTotalList,
             itemStyle: {
               normal: {

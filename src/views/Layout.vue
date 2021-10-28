@@ -3,7 +3,8 @@
     <div class="header">
       <div class="header_tips">
         <div class="store_total" v-if="allOnlineData">
-          门店总数：{{ allOnlineData.GymCount }}
+         <span>门店总数：{{ allOnlineData.GymCount }}</span>
+         <span style="padding-left:20px;">智能设备：{{allOnlineData.deviceCount}}</span>
         </div>
         <div class="time">{{ date }} - {{ days }}</div>
       </div>
@@ -22,7 +23,6 @@
               <div class="statis_item">
                 <span>会员人数（人）</span>
                 <span v-if="allOnlineData">{{ allOnlineData.TotalUser }}</span>
-                <!-- <span>33322</span> -->
               </div>
             </li>
             <li>
@@ -31,7 +31,6 @@
                 <span v-if="allOnlineData">{{
                   allOnlineData.CoachUserCount
                 }}</span>
-                <!-- <span>8732</span> -->
               </div>
             </li>
             <li>
@@ -40,7 +39,6 @@
                 <span v-if="allOnlineData"
                   >￥{{ allOnlineData.CardMoney }}</span
                 >
-                <!-- <span>￥1800</span> -->
               </div>
             </li>
             <li>
@@ -49,14 +47,17 @@
                 <span v-if="allOnlineData"
                   >￥{{ allOnlineData.CoachMoney }}</span
                 >
-                <!-- <span>￥9000</span> -->
               </div>
             </li>
           </ul>
         </div>
         <div class="real_sign">
           <h2 class="sign_title">实时签到</h2>
-          <dv-scroll-board :config="config" class="scroll-board" />
+          <dv-scroll-board
+            :config="config"
+            class="scroll-board"
+            ref="scrollBoard"
+          />
         </div>
       </div>
       <div class="center_box">
@@ -119,7 +120,6 @@
         </div>
       </div>
     </section>
-    <!-- leftEcharts -->
   </div>
 </template>
 
@@ -131,7 +131,6 @@ import activeEcharts from "../components/activeEcharts.vue";
 import incomeEcharts from "../components/incomeEcharts.vue";
 import signIn from "../components/signIn.vue";
 import numberScroll from "../components/numberScroll.vue";
-import QS from "qs";
 export default {
   name: "Layout",
   data() {
@@ -147,13 +146,16 @@ export default {
       date: null,
       days: null,
       config: {
-        header: ["门店", "姓名", "时间"],
+        header: ["门店", "姓名", "进场方式", "时间"],
         data: [[]],
         align: ["center"],
         headerBGC: "#0B194A",
         oddRowBGC: "#02071D",
         evenRowBGC: "#02071D",
         rowNum: 10,
+        headerHeight: 35,
+        waitTime: 2000,
+        columnWidth:[130,140,100,180]
       },
       allOnlineData: null,
       activePeopleCount: [],
@@ -184,7 +186,6 @@ export default {
     var jsonStr = {
       key: "D3069A3F7C5E262F83ACEE108C4F309D",
     };
-
     this.$axios
       .post(
         "https://user.360ruyu.cn/GymManage.asmx/RevenueData",
@@ -217,6 +218,11 @@ export default {
         this.activePeopleCount.reverse();
         this.incomeCount.reverse();
       });
+  },
+  destroyed() {
+    if (window.localStorage.getItem("username")) {
+      localStorage.removeItem("username");
+    }
   },
   methods: {
     getDays() {
@@ -343,29 +349,34 @@ export default {
         that.lockReconnect = false;
       }, 5000);
     },
-    handleTable(data1) {
-      //       createdate: "2021-10-27 17:14"
-      // gymid: 108
-      // userName: "赵小燕"
-      console.log('data1',data1);
-      var tableList = [];
-      var newList = [];
-      data1.forEach((item, index) => {
-        for (var o in item) {
-          if (newList.length == 3) {
-            if (o == "gymName" || o == "createdate" || o == "userName") {
-              newList.push(item[o]);
-              if (newList.length == 3) {
-                tableList.push(newList);
-              }
-            }
-            tableList.push(newList);
-          }
-        }
-        newList = [];
+    handleTable(dataList) {
+      // console.log("dataList", dataList);
+      var tableList = [],
+        items = [];
+      let data;
+      dataList.forEach((item) => {
+        items.push(
+          (data = {
+            gymName: item.gymName,
+            userName: item.userName,
+            deviceType: item.deviceType == "PC" ? "刷卡" : "人脸",
+            createdate: item.createdate,
+          })
+        );
+        // console.log('items',items)
       });
-      this.config.data = tableList;
-      this.$set(this.config, this.config.data, tableList);
+      if (items.length > 0) {
+        items.forEach((ite) => {
+          tableList.push(Object.values(ite));
+        });
+        this.config.data = tableList;
+      }
+      this.config = { ...this.config };
+      // this.$set(this.config, this.config.data, tableList);
+    },
+    //重新到当前的地方开始滚动
+    doUpdate(rows, index) {
+      this.$refs["scrollBoard"].updateRows(rows, index);
     },
   },
 };
@@ -411,8 +422,8 @@ export default {
 }
 .logo {
   position: absolute;
-  top: 48px;
-  left: 23px;
+  top: 53px;
+  left: 14px;
   width: 70px;
   height: 50px;
 }
@@ -431,7 +442,7 @@ export default {
   color: #fffefe;
 }
 .content {
-  padding: 30px 20px 25px;
+  padding: 30px 14px 22px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -515,11 +526,14 @@ export default {
   width: 547px;
   height: 420px;
 }
+/deep/.dv-scroll-board .header {
+  align-items: center !important;
+}
 /* 中间部分 */
 .center_box {
   float: left;
   width: 758px;
-  /* margin: 0 16px; */
+  margin: 0 10px;
 }
 .number_box {
   width: 100%;
@@ -532,40 +546,22 @@ export default {
 }
 .center_item {
   display: flex;
+  align-items: center;
   background: rgba(7, 19, 79, 0.3);
   border: 1px solid #6ef0ff;
 }
-.center_item div {
-  font-size: 50px;
-  font-family: Alibaba PuHuiTi;
-  font-weight: bold;
-  color: #ffdd3f;
-}
-.center_item span:last-child {
-  padding-left: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #e5e5e5;
-}
-.counter {
-  padding-left: 20px;
-}
-.center_title {
-  padding-left: 45px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #e5e5e5;
-}
 .todayWater {
-  margin-top: 36px;
+  margin-top: 32px;
 }
-.yuan {
-  padding-left: 60px;
+/deep/.center_item:last-child .count {
+  padding-left: 46px !important;
 }
+/*  */
+
 /* */
 .right_box {
   float: left;
-  width: 542px;
+  width: 547px;
 }
 .group,
 .personal {
@@ -588,9 +584,9 @@ export default {
 .map_box {
   margin-top: 26px;
   width: 758px;
-  height: 650px;
+  height: 653px;
   box-sizing: border-box;
-  background-image: url("../assets/7.png");
+  background-image: url("../assets/next.png");
   background-size: cover;
   background-position: center center;
 }
@@ -599,10 +595,10 @@ export default {
   display: flex;
   flex-direction: column;
   margin-top: 26px;
-  width: 547px;
-  height: 659px;
+  width: 100%;
+  height: 653px;
   box-sizing: border-box;
-  background-image: url("../assets/6.png");
+  background-image: url("../assets/last.png");
   background-size: cover;
   background-position: center center;
 }

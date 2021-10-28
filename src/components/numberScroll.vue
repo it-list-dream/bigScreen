@@ -20,15 +20,15 @@ export default {
     return {
       prosecutorArr: ["0", "0", "0", "0", "0", "0", "0", "0"],
       //这里的数字数组是个8位数，只是占位，不能直接使用，看需求有可能是10位或11、12、20等等
-      numbers: "59832",
+      numbers: "10000",
       //这个参数是后台传给我们的，也不能直接使用，需要转换
     };
   },
   watch: {
     scrollNumber: {
       handler(newValue, oldValue) {
-        this.numbers = this.scrollNumber.onlineTotal;
-        console.log(this.scrollNumber.onlineTotal)
+       this.numbers = Math.round(Number(this.scrollNumber.onlineTotal));
+        console.log(this.scrollNumber.onlineTotal);
         this.refreshLeft();
       },
       deep: true,
@@ -39,10 +39,6 @@ export default {
       //给数字前面补零 比如‘59832’补成8位即位‘00059832’
       return (Array(length).join("0") + num).slice(-length);
     },
-    // getRandomNumber(min, max) {
-    //   //为了看效果，refreshLeft触发增加数字看效果，和后台数据过来效果一样，不管增加或减少
-    //   return Math.floor(Math.random() * (max - min + 1) + min);
-    // },
     plusNPrAll() {
       //为了看效果，点击上面html中的iconfont触发，refreshLeft方法（我真啰嗦~）
       const res = this.PrefixInteger(this.numbers, 8);
@@ -63,7 +59,7 @@ export default {
   float: left;
   width: 100%;
   height: 70px;
-  padding: 10px 0;
+  padding: 10px 0 10px 45px;
 }
 .chart-m-l-c label {
   line-height: 70px;
@@ -71,6 +67,7 @@ export default {
   font-size: 20px;
   font-weight: bold;
   color: #e5e5e5;
+  padding-right: 10px;
 }
 .chart-m-l-c .count {
   height: 70px;
@@ -108,22 +105,11 @@ export default {
   color: #ffdd3f;
 }
 .chart-m-l-c .unit {
+  padding-left: 10px;
   float: left;
   line-height: 70px;
   font-size: 20px;
   font-weight: bold;
   color: #e5e5e5;
 }
-/* .chart-m-l-c span.iconfont {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  float: right;
-  text-align: center;
-  cursor: pointer;
-  color: #0071ff;
-}
-.chart-m-l-c span.iconfont:hover {
-  color: #5ec2a6;
-} */
 </style>
