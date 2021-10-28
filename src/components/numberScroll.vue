@@ -3,7 +3,7 @@
     <label v-if="scrollNumber">{{ scrollNumber.title }}</label>
     <div class="count">
       <b v-for="(item, index) in prosecutorArr" :key="index">
-        <div :style="{ top: -item * 70 + 'px' }">
+        <div :style="{ top: -item * .875 + 'rem' }">
           <i v-for="(ic, indexc) in 10" :key="indexc">{{ ic - 1 }}</i>
         </div>
       </b>
@@ -58,39 +58,39 @@ export default {
 .chart-m-l-c {
   float: left;
   width: 100%;
-  height: 70px;
-  padding: 10px 0 10px 45px;
+  height: .875rem;
+  padding: .125rem 0 .125rem .5625rem;
 }
 .chart-m-l-c label {
-  line-height: 70px;
+  line-height: .875rem;
   float: left;
-  font-size: 20px;
+  font-size: .25rem;
   font-weight: bold;
   color: #e5e5e5;
-  padding-right: 10px;
+  padding-right: .125rem;
 }
 .chart-m-l-c .count {
-  height: 70px;
+  height: .875rem;
   float: left;
-  padding: 0 5px;
+  padding: 0 .0625rem;
 }
 .chart-m-l-c .count b {
   position: relative;
   float: left;
   z-index: 3;
   overflow: hidden;
-  width: 48px;
-  height: 70px;
-  line-height: 70px;
+  width: .6rem;
+  height: .875rem;
+  line-height: .875rem;
   background: #1b2873;
-  border-radius: 2px;
+  border-radius: .025rem;
   color: #ffdd3f;
   text-align: center;
-  margin: 0 4px;
+  margin: 0 .05rem;
 }
 .chart-m-l-c .count b div {
   width: 100%;
-  height: 400px;
+  height: 5rem;
   position: absolute;
   left: 0;
   top: 0;
@@ -100,15 +100,15 @@ export default {
   float: left;
   font-style: normal;
   width: 100%;
-  height: 70px;
-  font-size: 50px;
+  height: .875rem;
+  font-size: .625rem;
   color: #ffdd3f;
 }
 .chart-m-l-c .unit {
-  padding-left: 10px;
+  padding-left: .125rem;
   float: left;
-  line-height: 70px;
-  font-size: 20px;
+  line-height: .875rem;
+  font-size: .25rem;
   font-weight: bold;
   color: #e5e5e5;
 }

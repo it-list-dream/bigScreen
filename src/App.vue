@@ -27,6 +27,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+    background-image: url("./assets/back.png");
+  background-size: cover;
+  background-position: center center;
   /* overflow-x:hidden !important; */
   /* overflow-y:hidden !important; */
   /* overflow: hidden; */

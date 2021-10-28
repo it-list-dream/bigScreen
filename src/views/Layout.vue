@@ -388,11 +388,11 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0; */
-  width: 100%;
-  background-image: url("../assets/back.png");
+  bottom: 0; 
+    background-image: url("../assets/back.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center center;*/
+  width: 100%;
 }
 
 .header {
@@ -400,32 +400,32 @@ export default {
 }
 .header_tips {
   position: relative;
-  font-size: 21px;
+  font-size: .2625rem;
   color: #3d7fe5;
 }
 .store_total {
   position: absolute;
-  top: 24px;
-  left: 276px;
+  top: .3rem;
+  left: 3.45rem;
 }
 
 .time {
   position: absolute;
-  top: 24px;
-  right: 276px;
+  top: .3rem;
+  right: 3.45rem;
 }
 
 .title_image {
-  padding-top: 37px;
+  padding-top: .4625rem;
   width: 100%;
-  height: 68px;
+  height: .85rem;
 }
 .logo {
   position: absolute;
-  top: 53px;
-  left: 14px;
-  width: 70px;
-  height: 50px;
+  top: .6625rem;
+  left: .175rem;
+  width: .875rem;
+  height: .625rem;
 }
 .logo > img {
   width: 100%;
@@ -433,16 +433,18 @@ export default {
 }
 .fitness_title {
   position: absolute;
-  top: 38px;
+  top: .475rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 40px;
+  font-size: .5rem;
   font-family: Alibaba PuHuiTi;
   font-weight: bold;
   color: #fffefe;
 }
 .content {
-  padding: 30px 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  padding: .375rem .175rem .275rem;
   box-sizing: border-box;
   width: 100%;
 }
@@ -456,22 +458,22 @@ export default {
   zoom: 1;
 }
 .left_box {
-  float: left;
-  width: 547px;
+  /* float: left; */
+  width: 6.8375rem;
 }
 /*  */
 .statistics {
-  width: 547px;
-  height: 348px;
+  width: 100%;
+  height: 4.35rem;
   background-image: url("../assets/1.png");
   background-size: cover;
   background-position: center center;
   box-sizing: border-box;
-  padding: 0 24px;
+  padding: 0 .3rem;
 }
 .statistics_title {
-  padding: 26px 0 36px;
-  font-size: 24px;
+  padding: .325rem 0 .45rem;
+  font-size: .3rem;
   font-weight: bold;
   color: #ffffff;
 }
@@ -487,53 +489,53 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 236px;
-  height: 104px;
+  width: 2.95rem;
+  height: 1.3rem;
   box-sizing: border-box;
-  padding: 22px 20px;
+  padding: .275rem .25rem;
   background: #162563;
-  margin-bottom: 21px;
+  margin-bottom: .2625rem;
 }
 .statis_item span:first-child {
-  font-size: 20px;
+  font-size: .25rem;
   font-weight: bold;
   color: #e7e7e7;
 }
 .statis_item span:last-child {
-  font-size: 20px;
+  font-size: .25rem;
   font-family: PingFang SC;
   font-weight: bold;
   color: #ffdd3f;
 }
 /* 实时签到 */
 .real_sign {
-  margin-top: 32px;
-  width: 547px;
-  height: 539px;
+  margin-top: .4rem;
+  width: 100%;
+  height: 6.7375rem;
   box-sizing: border-box;
   background-image: url("../assets/2.png");
   background-size: cover;
   background-position: center center;
 }
 .sign_title {
-  font-size: 24px;
+  font-size: .3rem;
   font-weight: bold;
   color: #ffffff;
-  padding: 32px 24px 30px;
+  padding: .4rem .3rem .375rem;
 }
 .scroll-board {
   /* margin-top: 22px; */
-  width: 547px;
-  height: 420px;
+  width: 6.8375rem;
+  height: 5.25rem;
 }
 /deep/.dv-scroll-board .header {
   align-items: center !important;
 }
 /* 中间部分 */
 .center_box {
-  float: left;
-  width: 758px;
-  margin: 0 10px;
+  /* float: left; */
+  width: 9.475rem;
+  /* margin: 0 .125rem; */
 }
 .number_box {
   width: 100%;
@@ -541,8 +543,8 @@ export default {
 .intoStoreNumber,
 .todayWater {
   width: 100%;
-  height: 101px;
-  line-height: 101px;
+  height: 1.2625rem;
+  line-height: 1.2625rem;
 }
 .center_item {
   display: flex;
@@ -551,30 +553,30 @@ export default {
   border: 1px solid #6ef0ff;
 }
 .todayWater {
-  margin-top: 32px;
+  margin-top: .4rem;
 }
 /deep/.center_item:last-child .count {
-  padding-left: 46px !important;
+  padding-left: .575rem !important;
 }
 /*  */
 
 /* */
 .right_box {
-  float: left;
-  width: 547px;
+  /* float: left; */
+  width: 6.8375rem;
 }
 .group,
 .personal {
-  width: 269px;
-  height: 239px;
+  width: 3.3625rem;
+  height: 2.9875rem;
 }
 .popularClass {
   display: flex;
   justify-content: space-between;
 }
 .popularClass > div {
-  width: 266px;
-  height: 238px;
+  width: 3.325rem;
+  height: 2.975rem;
   box-sizing: border-box;
   background-image: url("../assets/5.png");
   background-size: cover;
@@ -582,9 +584,9 @@ export default {
 }
 /* 地图 */
 .map_box {
-  margin-top: 26px;
-  width: 758px;
-  height: 653px;
+  margin-top: .325rem;
+  width: 9.475rem;
+  height: 8.1625rem;
   box-sizing: border-box;
   background-image: url("../assets/next.png");
   background-size: cover;
@@ -594,9 +596,9 @@ export default {
 .recentData {
   display: flex;
   flex-direction: column;
-  margin-top: 26px;
+  margin-top: .325rem;
   width: 100%;
-  height: 653px;
+  height: 8.1625rem;
   box-sizing: border-box;
   background-image: url("../assets/last.png");
   background-size: cover;

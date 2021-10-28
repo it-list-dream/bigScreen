@@ -1,4 +1,4 @@
-export const bigNumberTransform = (value)=>{
+export const bigNumberTransform = (value) => {
     const newValue = ['', '', '']
     let fr = 1000
     let num = 3
@@ -46,4 +46,11 @@ export const bigNumberTransform = (value)=>{
         newValue[1] = ''
     }
     return newValue.join('')
+}
+export const fontSize = (res) => {
+    let doocEl = document.documentElement,
+        clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    if (!clientWidth) return;
+    let fontSize = 100 * (clientWidth / 1920);
+    return res * fontSize
 }

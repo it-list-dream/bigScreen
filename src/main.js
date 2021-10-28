@@ -11,6 +11,7 @@ import './assets/style/reset.css'
 import './assets/style/iconfont.css'
 import axios from 'axios'
 import router from './router/index.js'
+import 'amfe-flexible'
 Vue.prototype.$axios = axios
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import {fontSize} from '../utils/utils.js';
 export default {
   name: "personalEcharts",
   data() {
@@ -57,7 +58,7 @@ export default {
             color: "#FFFFFF",
             fontWeight: "bolder",
             fontFamily: "sans-serif",
-            fontSize: 24,
+            fontSize: fontSize(0.24),
           },
         },
         grid: {

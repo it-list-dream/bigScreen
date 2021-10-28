@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import {fontSize} from '../utils/utils.js';
 export default {
   name: "activeEcharts",
   props: {
@@ -40,12 +41,12 @@ export default {
       this.option = {
         title: {
           text: "近半年活跃总数 "+total,
-          top: 26,
+          top: fontSize(0.26),
           left: "center",
           textStyle: {
             color: "#F8A417",
             fontFamily: "sans-serif",
-            fontSize: 27,
+            fontSize: fontSize(0.27),
           },
         },
         tooltip: {
@@ -81,7 +82,7 @@ export default {
             nameTextStyle: {
               color: "#1654fe",
               fontFamily: "sans-serif",
-              fontSize: 18,
+              fontSize: fontSize(0.18),
             },
           },
         ],
@@ -92,7 +93,7 @@ export default {
             nameTextStyle: {
               color: "#63B1FD",
               fontFamily: "sans-serif",
-              fontSize: 18,
+              fontSize: fontSize(0.18),
               padding: [0, 0, 0, 20],
             },
             axisLine: {
@@ -120,7 +121,7 @@ export default {
             nameTextStyle: {
               color: "#63B1FD",
               fontFamily: "sans-serif",
-              fontSize: 18,
+              fontSize: fontSize(0.18),
             },
             axisLine: {
               show: true,
@@ -156,6 +157,6 @@ export default {
 <style scoped>
 .active_containner {
   width: 100%;
-  height: 320px;
+  height: 4rem;
 }
 </style>
